@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import routes from "../constants/routes";
+import colors from "../constants/colors";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -49,34 +50,84 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <Text>Register Screen</Text>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={(text) => setUsername(text)}
-      />
-      <TouchableOpacity onPress={handleRegister}>
-        <Text>Register</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>
-        <Text>Already have an account? Login</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <Text style={styles.icon}>👋</Text>
+      <Text style={styles.heading}>Create your account!</Text>
+      <Text>It's free and easy</Text>
+      <View style={styles.registerForm}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+        />
+        <TouchableOpacity onPress={handleRegister} style={styles.button}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>
+          <Text>Already have an account? Login</Text>
+        </TouchableOpacity>
+      </View>
 
-      {error ? <Text>{error}</Text> : null}
+      {error && alert(error)}
     </View>
   );
 };
 export default RegisterScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  heading: {
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  icon: {
+    fontSize: 40,
+  },
+  registerForm: {
+    width: "80%",
+    paddingTop: 30,
+    alignItems: "center",
+    gap: 10,
+    justifyContent: "center",
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.4)",
+    borderRadius: 5,
+    padding: 10,
+  },
+  button: {
+    width: "100%",
+    height: 40,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});
