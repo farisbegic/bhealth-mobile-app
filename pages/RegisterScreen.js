@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { collection, addDoc, doc } from "firebase/firestore";
 import {
   StyleSheet,
   Text,
@@ -8,17 +9,33 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import routes from "../constants/routes";
 import colors from "../constants/colors";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { db } from "../firebase";
+import collections from "../constants/collections";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [date, setDate] = useState(new Date());
   const [error, setError] = useState("");
 
   const handleRegister = () => {
+    console.log("Registering...");
     setError("");
+    if (!name) {
+      alert("Please fill Name");
+      return;
+    }
+    if (!surname) {
+      alert("Please fill Surname");
+      return;
+    }
     if (!email) {
       alert("Please fill email");
       return;
@@ -34,18 +51,25 @@ const RegisterScreen = ({ navigation }) => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
+        if (userCredential.user) {
+          updateProfile(userCredential.user, {
+            displayName: username,
+          });
 
+          addDoc(collection(db, collections.users), {
+            uid: userCredential.user.uid,
+            name: name,
+            surname: surname,
+            username: username,
+            email: email,
+            date: date,
+          });
+        }
         navigation.navigate(routes.HOME);
       })
       .catch((error) => {
         console.log(error);
-        if (error.code === "auth/invalid-email") setError(error.message);
-        else if (error.code === "auth/user-not-found")
-          setError("No User Found");
-        else {
-          setError("Please check your email id or password");
-        }
+        setError(error.message);
       });
   };
 
@@ -55,6 +79,24 @@ const RegisterScreen = ({ navigation }) => {
       <Text style={styles.heading}>Create your account!</Text>
       <Text>It's free and easy</Text>
       <View style={styles.registerForm}>
+        <TextInput
+          style={styles.input}
+          placeholder="First Name"
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          value={surname}
+          onChangeText={(text) => setSurname(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+        />
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -67,12 +109,6 @@ const RegisterScreen = ({ navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-        />
         <TouchableOpacity onPress={handleRegister} style={styles.button}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
@@ -80,8 +116,6 @@ const RegisterScreen = ({ navigation }) => {
           <Text>Already have an account? Login</Text>
         </TouchableOpacity>
       </View>
-
-      {error && alert(error)}
     </View>
   );
 };
