@@ -9,7 +9,7 @@ const SplashScreen = ({ navigation }) => {
     setTimeout(() => {
       const user = auth.currentUser;
       if (user) {
-        navigation.replace(routes.HOME);
+        navigation.replace(routes.TAB_NAVIGATOR);
       } else {
         navigation.replace(routes.AUTH);
       }
