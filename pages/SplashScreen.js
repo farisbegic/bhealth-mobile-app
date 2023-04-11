@@ -2,15 +2,17 @@ import React, { useEffect } from "react";
 import { Image, SafeAreaView, StyleSheet } from "react-native";
 import { auth } from "../firebase";
 import colors from "../constants/colors";
+import routes from "../constants/routes";
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       const user = auth.currentUser;
+      console.log(user);
       if (user) {
-        navigation.replace("Home");
+        navigation.replace(routes.HOME);
       } else {
-        navigation.replace("Auth");
+        navigation.replace(routes.AUTH);
       }
     }, 5000);
   }, []);
