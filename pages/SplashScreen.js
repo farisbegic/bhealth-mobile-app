@@ -8,7 +8,6 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       const user = auth.currentUser;
-      console.log(user);
       if (user) {
         navigation.replace(routes.HOME);
       } else {

@@ -33,7 +33,6 @@ const LoginScreen = ({ navigation }) => {
         navigation.navigate(routes.HOME);
       })
       .catch((error) => {
-        console.log(error);
         if (error.code === "auth/invalid-email") setError(error.message);
         else if (error.code === "auth/user-not-found")
           setError("No User Found");
@@ -58,6 +57,7 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="Password"
+          secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />

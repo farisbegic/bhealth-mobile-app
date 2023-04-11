@@ -4,7 +4,6 @@ const login = async (username, password) => {
       navigation.navigate(routes.HOME);
     })
     .catch((error) => {
-      console.log(error);
       if (error.code === "auth/invalid-email") setError(error.message);
       else if (error.code === "auth/user-not-found") setError("No User Found");
       else {

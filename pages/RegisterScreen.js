@@ -68,7 +68,6 @@ const RegisterScreen = ({ navigation }) => {
         navigation.navigate(routes.HOME);
       })
       .catch((error) => {
-        console.log(error);
         setError(error.message);
       });
   };
@@ -106,6 +105,7 @@ const RegisterScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="Password"
+          secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
