@@ -4,4 +4,5 @@ export default {
   LOGIN: "LoginScreen",
   REGISTER: "RegisterScreen",
   HOME: "HomeScreen",
+  PROFILE: "ProfileScreen",
 };

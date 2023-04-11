@@ -1,21 +1,50 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { StyleSheet } from "react-native";
+import colors from "./constants/colors";
+import routes from "./constants/routes";
 import HomeScreen from "./pages/HomeScreen";
-import SplashScreen from "./pages/SplashScreen";
 import LoginScreen from "./pages/LoginScreen";
 import RegisterScreen from "./pages/RegisterScreen";
-import ROUTES from "./constants/routes";
-import colors from "./constants/colors";
+import SplashScreen from "./pages/SplashScreen";
+import ProfileScreen from "./pages/ProfileScreen";
+import { AntDesign } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function TabNavigator() {
+  return (
+    <Tab.Navigator initialRouteName={routes.HOME}>
+      <Tab.Screen
+        name={routes.HOME}
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={routes.PROFILE}
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="user" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 const Auth = () => {
   return (
-    <Stack.Navigator initialRouteName={ROUTES.LOGIN}>
+    <Stack.Navigator initialRouteName={routes.LOGIN}>
       <Stack.Screen
-        name={ROUTES.LOGIN}
+        name={routes.LOGIN}
         component={LoginScreen}
         options={{
           title: "Login",
@@ -29,7 +58,7 @@ const Auth = () => {
         }}
       />
       <Stack.Screen
-        name={ROUTES.REGISTER}
+        name={routes.REGISTER}
         component={RegisterScreen}
         options={{
           title: "Register",
@@ -49,20 +78,20 @@ const Auth = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={ROUTES.SPLASH}>
+      <Stack.Navigator initialRouteName={routes.SPLASH}>
         <Stack.Screen
-          name={ROUTES.SPLASH}
+          name={routes.SPLASH}
           component={SplashScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name={ROUTES.AUTH}
+          name={routes.AUTH}
           component={Auth}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name={ROUTES.HOME}
-          component={HomeScreen}
+          name={routes.HOME}
+          component={TabNavigator}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
