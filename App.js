@@ -11,29 +11,43 @@ import RegisterScreen from "./pages/RegisterScreen";
 import SplashScreen from "./pages/SplashScreen";
 import ProfileScreen from "./pages/ProfileScreen";
 import { AntDesign } from "@expo/vector-icons";
+import SearchScreen from "./pages/SearchScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
+  const getTabBarIcon = (name, color, size, focused) => {
+    const iconColor = focused ? colors.primary : color;
+    return <AntDesign name={name} color={iconColor} size={size} />;
+  };
   return (
     <Tab.Navigator initialRouteName={routes.HOME}>
       <Tab.Screen
         name={routes.HOME}
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="home" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color, size, focused }) =>
+            getTabBarIcon("home", color, size, focused),
+          tabBarShowLabel: false,
+        }}
+      />
+      <Tab.Screen
+        name={routes.SEARCH}
+        component={SearchScreen}
+        options={{
+          tabBarIcon: ({ color, size, focused }) =>
+            getTabBarIcon("search1", color, size, focused),
+          tabBarShowLabel: false,
         }}
       />
       <Tab.Screen
         name={routes.PROFILE}
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="user" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color, size, focused }) =>
+            getTabBarIcon("user", color, size, focused),
+          tabBarShowLabel: false,
         }}
       />
     </Tab.Navigator>
