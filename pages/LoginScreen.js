@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        navigation.navigate(routes.HOME);
+        navigation.navigate(routes.TAB_NAVIGATOR);
       })
       .catch((error) => {
         if (error.code === "auth/invalid-email") setError(error.message);

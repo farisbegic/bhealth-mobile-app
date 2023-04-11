@@ -104,7 +104,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name={routes.HOME}
+          name={routes.TAB_NAVIGATOR}
           component={TabNavigator}
           options={{ headerShown: false }}
         />

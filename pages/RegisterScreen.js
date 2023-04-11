@@ -65,7 +65,7 @@ const RegisterScreen = ({ navigation }) => {
             date: date,
           });
         }
-        navigation.navigate(routes.HOME);
+        navigation.navigate(routes.TAB_NAVIGATOR);
       })
       .catch((error) => {
         setError(error.message);
