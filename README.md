@@ -1,4 +1,4 @@
-# Project Name
+# BHealth
 
 BHealth is a web and mobile application which consists of two types of customers, i.e., users and private laboratories in Bosnia and Herzegovina, and offers efficient search for laboratory services to the users, as well as an ability to keep all their test results in one place, while for laboratories, it offers efficient and effective way of storing all their previous appointments, quick uploading of test results, and following precalculated statistics. Therefore, the business in which the project will be operating is healthcare in Bosnia and Herzegovina, with the narrowed scope to only laboratories, due to the collected feedback from the initial market research, which was firstly focused on all private health institution services. In addition, an application cannot offer to confuse the patients when their lives are at stake, so the focus is narrowed only to routine tests, rather than to services of high importance. 
 
