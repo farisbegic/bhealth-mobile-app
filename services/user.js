@@ -8,12 +8,9 @@ export async function getProfile(id) {
 
   const snapshot = await getDocs(queryFunction);
 
-  const users = [];
-
-  return snapshot.forEach((doc) => {
-    console.log(doc.id, "=>", doc.data());
-    users.push({ id: doc.id, ...doc.data() });
+  const users = snapshot.docs.map((doc) => {
+    return { id: doc.id, ...doc.data() };
   });
 
-  return users;
+  return users[0];
 }

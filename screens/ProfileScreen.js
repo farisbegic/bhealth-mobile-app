@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { auth } from "../firebase";
 import { getProfile } from "../services/user";
+import { signOut } from "firebase/auth";
+import routes from "../constants/routes";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -16,6 +18,12 @@ const ProfileScreen = ({ navigation }) => {
     fetchData();
   }, []);
 
+  const handleLogout = () => {
+    auth.signOut();
+    navigation.navigate(routes.LOGIN);
+    setUser(null);
+  };
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -28,12 +36,15 @@ const ProfileScreen = ({ navigation }) => {
           />
           <View style={styles.profileDetails}>
             <Text style={styles.profileHeading}>
-              {auth.currentUser.displayName}
+              {user.name} {user.surname}
             </Text>
             <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
           </View>
         </View>
       )}
+      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -70,5 +81,19 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 14,
     color: "#888",
+  },
+  logoutButton: {
+    height: 40,
+    width: 100,
+    backgroundColor: "#cf0808",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+  },
+  logoutText: {
+    color: "white",
+    fontWeight: 500,
   },
 });

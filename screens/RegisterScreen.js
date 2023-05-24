@@ -26,7 +26,6 @@ const RegisterScreen = ({ navigation }) => {
   const [error, setError] = useState("");
 
   const handleRegister = () => {
-    console.log("Registering...");
     setError("");
     if (!name) {
       alert("Please fill Name");
@@ -81,30 +80,43 @@ const RegisterScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="First Name"
+          autoCapitalize="none"
+          autoCorrect={false}
           value={name}
           onChangeText={(text) => setName(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Last Name"
+          autoCapitalize="none"
+          autoCorrect={false}
           value={surname}
           onChangeText={(text) => setSurname(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Username"
+          autoCapitalize="none"
+          autoCorrect={false}
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
+          autoCapitalize="none"
+          autoCorrect={false}
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
