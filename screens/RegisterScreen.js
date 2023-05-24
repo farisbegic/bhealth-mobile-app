@@ -9,44 +9,38 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import routes from "../constants/routes";
 import colors from "../constants/colors";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { db } from "../firebase";
 import collections from "../constants/collections";
+import { Formik, Field } from "formik";
+import * as Yup from "yup";
+import CustomInput from "../components/common/CustomInput";
 
 const RegisterScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [date, setDate] = useState(new Date());
   const [error, setError] = useState("");
 
-  const handleRegister = () => {
-    setError("");
-    if (!name) {
-      alert("Please fill Name");
-      return;
-    }
-    if (!surname) {
-      alert("Please fill Surname");
-      return;
-    }
-    if (!email) {
-      alert("Please fill email");
-      return;
-    }
-    if (!password) {
-      alert("Please fill Password");
-      return;
-    }
-    if (!username) {
-      alert("Please fill Username");
-      return;
-    }
+  const initialValues = {
+    name: "",
+    surname: "",
+    username: "",
+    email: "",
+    password: "",
+    date: new Date(),
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Required"),
+    surname: Yup.string().required("Required"),
+    username: Yup.string().required("Required"),
+    email: Yup.string().email("Invalid email format").required("Required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Required"),
+  });
+
+  const handleRegister = (values) => {
+    const { name, surname, username, email, password, date } = values;
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -67,6 +61,7 @@ const RegisterScreen = ({ navigation }) => {
         navigation.navigate(routes.TAB_NAVIGATOR);
       })
       .catch((error) => {
+        console.log(error);
         setError(error.message);
       });
   };
@@ -77,53 +72,63 @@ const RegisterScreen = ({ navigation }) => {
       <Text style={styles.heading}>Create your account!</Text>
       <Text>It's free and easy</Text>
       <View style={styles.registerForm}>
-        <TextInput
-          style={styles.input}
-          placeholder="First Name"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={name}
-          onChangeText={(text) => setName(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Last Name"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={surname}
-          onChangeText={(text) => setSurname(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoCompleteType="email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <TouchableOpacity onPress={handleRegister} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+          onSubmit={(values) => handleRegister(values)}
+        >
+          {({ handleSubmit, isValid, values }) => (
+            <>
+              <Field
+                component={CustomInput}
+                name="name"
+                placeholder="Name"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <Field
+                component={CustomInput}
+                name="surname"
+                placeholder="Surname"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <Field
+                component={CustomInput}
+                name="username"
+                placeholder="Username"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <Field
+                component={CustomInput}
+                name="email"
+                placeholder="Email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoCompleteType="email"
+              />
+              <Field
+                component={CustomInput}
+                name="password"
+                placeholder="Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={true}
+              />
+              <TouchableOpacity
+                onPress={handleSubmit}
+                style={styles.button}
+                disabled={!isValid || values.email === ""}
+              >
+                <Text style={styles.buttonText}>Register</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
+        {error !== "" && <Text style={{ color: "red" }}>{error}</Text>}
         <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>
           <Text>Already have an account? Login</Text>
         </TouchableOpacity>
