@@ -1,9 +1,7 @@
-// Import React and Component
 import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -11,34 +9,35 @@ import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import routes from "../constants/routes";
 import colors from "../constants/colors";
+import { Formik, Field } from "formik";
+import * as Yup from "yup";
+import CustomInput from "../components/common/CustomInput";
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    setError("");
-    if (!email) {
-      alert("Please fill email");
-      return;
-    }
-    if (!password) {
-      alert("Please fill Password");
-      return;
-    }
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email format").required("Required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Required"),
+  });
+
+  const handleLogin = (values) => {
+    const { email, password } = values;
 
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         navigation.navigate(routes.TAB_NAVIGATOR);
       })
       .catch((error) => {
-        if (error.code === "auth/invalid-email") setError(error.message);
-        else if (error.code === "auth/user-not-found")
-          setError("No User Found");
-        else {
-          setError("Please check your email id or password");
-        }
+        console.log(error);
+        setError(error.message);
       });
   };
 
@@ -48,28 +47,42 @@ const LoginScreen = ({ navigation }) => {
       <Text style={styles.heading}>Welcome Back!</Text>
       <Text>Please log in using your credentials</Text>
       <View style={styles.loginForm}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoCompleteType="email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          autoCapitalize="none"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+          onSubmit={(values) => handleLogin(values)}
+        >
+          {({ handleSubmit, isValid, values }) => (
+            <>
+              <Field
+                component={CustomInput}
+                name="email"
+                placeholder="Email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoCompleteType="email"
+              />
+              <Field
+                component={CustomInput}
+                name="password"
+                placeholder="Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={true}
+              />
+              <TouchableOpacity
+                onPress={handleSubmit}
+                style={styles.button}
+                disabled={!isValid || values.email === ""}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
+        {error !== "" && <Text style={{ color: "red" }}>{error}</Text>}
         <TouchableOpacity onPress={() => navigation.navigate(routes.REGISTER)}>
           <Text>Don't have an account? Register</Text>
         </TouchableOpacity>
