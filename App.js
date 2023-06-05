@@ -12,9 +12,7 @@ import SplashScreen from "./screens/SplashScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import { AntDesign } from "@expo/vector-icons";
 import SearchScreen from "./screens/SearchScreen";
-import LaboratoryScreen from "./screens/Laboratory";
-
-
+import LaboratoryScreen from "./screens/LaboratoryScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -112,21 +110,6 @@ export default function App() {
           component={TabNavigator}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-            name={routes.LABORATORY}
-            component={LaboratoryScreen}
-            options={{
-              title: "Laboratory",
-              headerStyle: {
-                backgroundColor: colors.primary,
-              },
-              headerTintColor: colors.tetriary,
-              headerTitleStyle: {
-                fontWeight: "bold",
-              },
-            }}
-        />
-
       </Stack.Navigator>
     </NavigationContainer>
   );
