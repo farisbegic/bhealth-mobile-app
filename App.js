@@ -12,7 +12,7 @@ import SplashScreen from "./screens/SplashScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import { AntDesign } from "@expo/vector-icons";
 import SearchScreen from "./screens/SearchScreen";
-import LaboratoryScreen from "./screens/LaboratoryScreen";
+import LaboratoryScreen from "./screens/Laboratory";
 
 
 
