@@ -16,8 +16,12 @@
     "@react-navigation/native-stack": "^6.9.12",
     "expo": "~48.0.10",
     "expo-status-bar": "~1.4.4",
+<<<<<<< HEAD
     "firebase": "^9.19.1",
     "formik": "^2.2.9",
+=======
+    "firebase": "^9.21.0",
+>>>>>>> f4f6d6a (Fix)
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-dotenv": "^3.4.8",
