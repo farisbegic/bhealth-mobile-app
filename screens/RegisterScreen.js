@@ -83,7 +83,7 @@ const RegisterScreen = ({ navigation }) => {
               <Field
                 component={CustomInput}
                 name="surname"
-                placeholder="Surname"
+                placeholder="Address"
                 autoCapitalize="none"
                 autoCorrect={false}
               />

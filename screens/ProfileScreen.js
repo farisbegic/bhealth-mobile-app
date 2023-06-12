@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {Image, StyleSheet, Text, View, TouchableOpacity, FlatList} from "react-native";
 import { auth } from "../firebase";
 import { getProfile } from "../services/user";
 import { signOut } from "firebase/auth";
 import routes from "../constants/routes";
+import Service from "./Service";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState([]);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -36,12 +39,14 @@ const ProfileScreen = ({ navigation }) => {
           />
           <View style={styles.profileDetails}>
             <Text style={styles.profileHeading}>
-              {user.name} {user.surname}
+              {user.name}
             </Text>
+            <Text style={styles.paragraph}>{user.surname}</Text>
             <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
           </View>
         </View>
       )}
+
       <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
@@ -90,10 +95,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 5,
     padding: 10,
-    marginTop: 10,
+    marginTop: 30,
   },
   logoutText: {
     color: "white",
     fontWeight: 500,
   },
+  menu: {
+    marginTop: 30,
+  }
 });
