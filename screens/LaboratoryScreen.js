@@ -1,4 +1,5 @@
 import React from "react";
+import routes from "../constants/routes";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 const LaboratoryScreen = ({ route }) => {

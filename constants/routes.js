@@ -7,4 +7,7 @@ export default {
   HOME: "HomeScreen",
   PROFILE: "ProfileScreen",
   SEARCH: "SearchScreen",
+  LAB : "LaboratoryScreen"
 };
+
+
