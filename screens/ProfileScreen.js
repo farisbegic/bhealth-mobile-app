@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {Image, StyleSheet, Text, View, TouchableOpacity, FlatList} from "react-native";
-import { auth } from "../firebase";
+import {Image, StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from "react-native";
+import {auth, db} from "../firebase";
 import { getProfile } from "../services/user";
 import { signOut } from "firebase/auth";
 import routes from "../constants/routes";
-import Service from "./Service";
+import EditProfile from "./EditProfile";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [services, setServices] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
 
   useEffect(() => {
@@ -27,6 +27,23 @@ const ProfileScreen = ({ navigation }) => {
     setUser(null);
   };
 
+  const deleteUser = async () => {
+    setLoading(true);
+    try {
+      await db.collection("users").doc(auth.currentUser.uid).delete();
+      await auth.currentUser.delete();
+      handleLogout();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showEditProfile = () => setModalVisible(true);
+
+  const hideEditProfile = () => setModalVisible(false);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -39,16 +56,22 @@ const ProfileScreen = ({ navigation }) => {
           />
           <View style={styles.profileDetails}>
             <Text style={styles.profileHeading}>
-              {user.name}
+              {user.name} {user.surname}
             </Text>
-            <Text style={styles.paragraph}>{user.surname}</Text>
             <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
           </View>
+
+          <TouchableOpacity onPress={showEditProfile} style={styles.editProfileButton}>
+            <Text style={styles.buttonText}>Edit Profile</Text>
+          </TouchableOpacity>
+
+          <EditProfile visible={modalVisible} user={user} onClose={hideEditProfile} />
+
         </View>
       )}
 
       <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-        <Text style={styles.logoutText}>Logout</Text>
+        <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -93,15 +116,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#cf0808",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 5,
+    borderRadius: 2,
     padding: 10,
     marginTop: 30,
   },
-  logoutText: {
+  buttonText: {
     color: "white",
     fontWeight: 500,
   },
   menu: {
+    marginTop: 30,
+  },
+  editProfileButton: {
+    height: 40,
+    width: 100,
+    backgroundColor: "#369",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 2,
+    padding: 10,
     marginTop: 30,
   }
 });
