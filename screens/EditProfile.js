@@ -1,10 +1,14 @@
-import {useState} from 'react';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from "react";
+import {db} from "../firebase";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import colors from "../constants/colors";
+import collections from "../constants/collections";
 import {Field, Formik} from "formik";
-import CustomInput from "../components/common/CustomInput";
 import * as Yup from "yup";
+import CustomInput from "../components/common/CustomInput";
 
-const EditProfile = ({ visible, onClose, user }) => {
+const EditProfile = ({ visible, onClose, user, onUpdate }) => {
 
     const [error, setError] = useState("");
 
@@ -12,25 +16,42 @@ const EditProfile = ({ visible, onClose, user }) => {
         name: user.name,
         surname: user.surname,
         username: user.username,
-        email: user.email,
-        password: user.password,
-        date: new Date(),
     };
 
     const validationSchema = Yup.object({
-        name: Yup.string().required("Required"),
-        surname: Yup.string().required("Required"),
-        username: Yup.string().required("Required"),
-        email: Yup.string().email("Invalid email format").required("Required"),
-        password: Yup.string()
-            .min(6, "Password must be at least 6 characters")
-            .required("Required"),
+        name: Yup.string(),
+        surname: Yup.string(),
+        username: Yup.string(),
     });
+
+    const handleUpdate = async (values) => {
+        try {
+            const docRef = doc(db, collections.users, user.id);
+            const docSnapshot = await getDoc(docRef);
+
+            if (docSnapshot.exists()) {
+                await updateDoc(docRef, {
+                    name: values.name,
+                    surname: values.surname,
+                    username: values.username,
+                });
+            } else {
+                console.log('Document does not exist!');
+            }
+        } catch (error) {
+            console.error('Error while updating document:', error);
+        }
+
+        const updatedUserData = { ...user, ...values };
+        onUpdate(updatedUserData);
+
+        onClose();
+    };
+
 
     return (
         <Modal visible={visible} animationType='slide'>
             <View style={styles.container}>
-
                 <View style={styles.updateForm}>
                     <Formik
                         validationSchema={validationSchema}
@@ -60,110 +81,41 @@ const EditProfile = ({ visible, onClose, user }) => {
                                     autoCapitalize="none"
                                     autoCorrect={false}
                                 />
-                                <Field
-                                    component={CustomInput}
-                                    name="email"
-                                    placeholder="Email"
-                                    textContentType="emailAddress"
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="email"
-                                />
-                                <Field
-                                    component={CustomInput}
-                                    name="password"
-                                    placeholder="Password"
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    secureTextEntry={true}
-                                />
                                 <TouchableOpacity
                                     onPress={handleSubmit}
                                     style={styles.button}
                                     disabled={!isValid || values.email === ""}
                                 >
-                                    <Text style={styles.buttonText}>Register</Text>
+                                    <Text style={styles.buttonText}>Edit</Text>
                                 </TouchableOpacity>
                             </>
                         )}
                     </Formik>
-
                     {error !== "" && <Text style={{ color: "red" }}>{error}</Text>}
-                </View>
-
-                <View style={styles.buttonContainer}>
-                    <View style={styles.button}>
-
-                        <TouchableOpacity style={styles.editProfileButton}>
-                            <Text style={styles.buttonText}>Edit</Text>
-                        </TouchableOpacity>
-
-                    </View>
 
                     <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                         <Text style={styles.buttonText}>Close</Text>
                     </TouchableOpacity>
-
                 </View>
             </View>
         </Modal>
     );
-}
-
+};
 export default EditProfile;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column', // default
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    inputText: {
-        width: '70%',
-        backgroundColor: 'white',
-        borderWidth: 1,
-        fontSize: 16,
-        padding: 4
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 16
-    },
-    button: {
-        width: 120,
-        marginHorizontal: 8
-    },
-    image: {
-        width:100,
-        height: 100,
-        margin: 20
-    },
-    editProfileButton: {
-        height: 40,
-        width: 100,
-        backgroundColor: "#369",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 2,
-        padding: 10,
-        marginTop: 30,
+        gap: 10,
     },
-    buttonText: {
-        color: "white",
-        fontWeight: 500,
+    heading: {
+        fontSize: 25,
+        fontWeight: "bold",
     },
-    closeButton: {
-        height: 40,
-        width: 100,
-        backgroundColor: "#cf0808",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 2,
-        padding: 10,
-        marginTop: 30,
+    icon: {
+        fontSize: 40,
     },
     updateForm: {
         width: "80%",
@@ -171,5 +123,36 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 10,
         justifyContent: "center",
+    },
+    input: {
+        width: "100%",
+        height: 40,
+        borderWidth: 1,
+        borderColor: "rgba(0,0,0,0.4)",
+        borderRadius: 5,
+        padding: 10,
+    },
+    button: {
+        width: "100%",
+        height: 40,
+        backgroundColor: colors.primary,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 5,
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    buttonText: {
+        color: "white",
+        fontWeight: "bold",
+    },
+    closeButton: {
+        width: "100%",
+        height: 40,
+        backgroundColor: colors.red,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 5,
+        marginBottom: 10,
     },
 });

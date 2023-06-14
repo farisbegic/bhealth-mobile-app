@@ -1,4 +1,4 @@
-import { collection, getDocs, where, query } from "firebase/firestore";
+import {collection, getDocs, where, query, doc} from "firebase/firestore";
 import collections from "../constants/collections";
 import { db } from "../firebase";
 

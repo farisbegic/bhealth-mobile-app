@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
-import {Image, StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from "react-native";
+import React, {useEffect, useState} from "react";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {auth, db} from "../firebase";
-import { getProfile } from "../services/user";
-import { signOut } from "firebase/auth";
+import {getProfile} from "../services/user";
 import routes from "../constants/routes";
 import EditProfile from "./EditProfile";
+import colors from "../constants/colors";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -21,23 +20,21 @@ const ProfileScreen = ({ navigation }) => {
     fetchData();
   }, []);
 
+  async function deleteUser() {
+    const uid = auth.currentUser.uid;
+    auth.currentUser.delete().then(() => {
+      db.collection('users')
+          .doc(uid)
+          .delete()
+    }).catch((error) => {
+      console.log(error, "error")
+    }).finally(() => setUser((state) => ({ ...state, isLoggedIn: false })))
+  }
+
   const handleLogout = () => {
     auth.signOut();
     navigation.navigate(routes.LOGIN);
     setUser(null);
-  };
-
-  const deleteUser = async () => {
-    setLoading(true);
-    try {
-      await db.collection("users").doc(auth.currentUser.uid).delete();
-      await auth.currentUser.delete();
-      handleLogout();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const showEditProfile = () => setModalVisible(true);
@@ -58,6 +55,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.profileHeading}>
               {user.name} {user.surname}
             </Text>
+            <Text style={styles.paragraph}>{user.username}</Text>
             <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
           </View>
 
@@ -65,10 +63,14 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
 
-          <EditProfile visible={modalVisible} user={user} onClose={hideEditProfile} />
+          <EditProfile visible={modalVisible} user={user} onClose={hideEditProfile} onUpdate={setUser}/>
 
         </View>
       )}
+
+      <TouchableOpacity onPress={deleteUser} style={styles.logoutButton}>
+        <Text style={styles.buttonText}>Delete</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
         <Text style={styles.buttonText}>Logout</Text>
@@ -109,11 +111,12 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 14,
     color: "#888",
+    margin: 3
   },
   logoutButton: {
     height: 40,
     width: 100,
-    backgroundColor: "#cf0808",
+    backgroundColor: colors.red,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 2,
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
   editProfileButton: {
     height: 40,
     width: 100,
-    backgroundColor: "#369",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 2,
