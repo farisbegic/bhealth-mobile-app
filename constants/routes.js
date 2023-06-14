@@ -9,5 +9,3 @@ export default {
   SEARCH: "SearchScreen",
   LAB : "LaboratoryScreen"
 };
-
-

@@ -15,6 +15,8 @@ import SearchScreen from "./screens/SearchScreen";
 import LaboratoryScreen from "./screens/LaboratoryScreen";
 
 
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -91,6 +93,12 @@ const Auth = () => {
   );
 };
 
+
+
+
+
+
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -110,6 +118,14 @@ export default function App() {
           component={TabNavigator}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+         />
+         <Stack.Screen
+         name="Laboratory"
+         component={LaboratoryScreen}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );
