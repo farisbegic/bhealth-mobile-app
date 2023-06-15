@@ -24,97 +24,97 @@ const LaboratoryScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Laboratory Details</Text>
-        </View>
-        <View style={styles.contentContainer}>
-          <Image source={require("../assets/lab.jpeg")} style={styles.headerImage} />
-          <Text style={styles.title}>Name:</Text>
-          <Text style={styles.info}>{lab.name}</Text>
-          <Text style={styles.title}>Address:</Text>
-          <Text style={styles.info}>{lab.address}</Text>
-          <Text style={styles.title}>Phone:</Text>
-          <Text style={styles.info}>{lab.phone}</Text>
-          <Text style={styles.title}>Email:</Text>
-          <Text style={styles.info}>{lab.email}</Text>
-
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Services:</Text>
-            <TouchableHighlight
-              style={styles.dropdownButton}
-              underlayColor="#eeeeee"
-              onPress={() => setShowServicesModal(true)}
-            >
-              <>
-                <Text style={styles.dropdownButtonText}>{selectedService}</Text>
-                <Ionicons name="caret-down" size={16} color="#666666" style={styles.dropdownButtonIcon} />
-              </>
-            </TouchableHighlight>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Laboratory Details</Text>
           </View>
+          <View style={styles.contentContainer}>
+            <Image source={require("../assets/lab.jpeg")} style={styles.headerImage} />
+            <Text style={styles.title}>Name:</Text>
+            <Text style={styles.info}>{lab.name}</Text>
+            <Text style={styles.title}>Address:</Text>
+            <Text style={styles.info}>{lab.address}</Text>
+            <Text style={styles.title}>Phone:</Text>
+            <Text style={styles.info}>{lab.phone}</Text>
+            <Text style={styles.title}>Email:</Text>
+            <Text style={styles.info}>{lab.email}</Text>
 
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Doctors:</Text>
-            <TouchableHighlight
-              style={styles.dropdownButton}
-              underlayColor="#eeeeee"
-              onPress={() => setShowDoctorsModal(true)}
-            >
-              <>
-                <Text style={styles.dropdownButtonText}>{selectedDoctor}</Text>
-                <Ionicons name="caret-down" size={16} color="#666666" style={styles.dropdownButtonIcon} />
-              </>
-            </TouchableHighlight>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showServicesModal}
-        onRequestClose={() => setShowServicesModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {lab.services.map((service, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.modalItem}
-                onPress={() => handleServiceSelect(service)}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Services:</Text>
+              <TouchableHighlight
+                  style={styles.dropdownButton}
+                  underlayColor="#eeeeee"
+                  onPress={() => setShowServicesModal(true)}
               >
-                <Text style={styles.modalItemText}>{service}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      </Modal>
+                <>
+                  <Text style={styles.dropdownButtonText}>{selectedService}</Text>
+                  <Ionicons name="caret-down" size={16} color="#666666" style={styles.dropdownButtonIcon} />
+                </>
+              </TouchableHighlight>
+            </View>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showDoctorsModal}
-        onRequestClose={() => setShowDoctorsModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {lab.doctors.map((doctor, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.modalItem}
-                onPress={() => handleDoctorSelect(doctor)}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Doctors:</Text>
+              <TouchableHighlight
+                  style={styles.dropdownButton}
+                  underlayColor="#eeeeee"
+                  onPress={() => setShowDoctorsModal(true)}
               >
-                <Text style={styles.modalItemText}>{doctor}</Text>
-              </TouchableOpacity>
-            ))}
+                <>
+                  <Text style={styles.dropdownButtonText}>{selectedDoctor}</Text>
+                  <Ionicons name="caret-down" size={16} color="#666666" style={styles.dropdownButtonIcon} />
+                </>
+              </TouchableHighlight>
+            </View>
           </View>
+          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
-    </ScrollView>
+
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showServicesModal}
+            onRequestClose={() => setShowServicesModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              {lab.services.map((service, index) => (
+                  <TouchableOpacity
+                      key={index}
+                      style={styles.modalItem}
+                      onPress={() => handleServiceSelect(service)}
+                  >
+                    <Text style={styles.modalItemText}>{service}</Text>
+                  </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showDoctorsModal}
+            onRequestClose={() => setShowDoctorsModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              {lab.doctors.map((doctor, index) => (
+                  <TouchableOpacity
+                      key={index}
+                      style={styles.modalItem}
+                      onPress={() => handleDoctorSelect(doctor)}
+                  >
+                    <Text style={styles.modalItemText}>{doctor}</Text>
+                  </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
   );
 };
 

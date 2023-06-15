@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {auth, db} from "../firebase";
 import {getProfile} from "../services/user";
 import routes from "../constants/routes";
 import EditProfile from "./EditProfile";
 import colors from "../constants/colors";
+import {doc, deleteDoc} from "firebase/firestore";
+import collections from "../constants/collections";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -20,16 +22,42 @@ const ProfileScreen = ({ navigation }) => {
     fetchData();
   }, []);
 
-  async function deleteUser() {
-    const uid = auth.currentUser.uid;
-    auth.currentUser.delete().then(() => {
-      db.collection('users')
-          .doc(uid)
-          .delete()
-    }).catch((error) => {
-      console.log(error, "error")
-    }).finally(() => setUser((state) => ({ ...state, isLoggedIn: false })))
-  }
+    const deleteUser = async () => {
+        Alert.alert(
+            'Delete Account',
+            'Are you sure you want to delete your account?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: async () => {
+                  try {
+                    const docRef = doc(db, collections.users, user.id);
+
+                    await deleteDoc(docRef)
+                        .then(() => {
+                          console.log("Entire Document has been deleted successfully.")
+                        })
+                        .catch(error => {
+                          console.log(error);
+                        })
+
+                    handleLogout();
+
+                    console.log('Account deleted successfully');
+                  } catch (error) {
+                    console.error('Error deleting account:', error);
+                  }
+                },
+              },
+            ]
+        )
+    }
+
 
   const handleLogout = () => {
     auth.signOut();
