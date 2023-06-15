@@ -22,41 +22,41 @@ const ProfileScreen = ({ navigation }) => {
     fetchData();
   }, []);
 
-    const deleteUser = async () => {
-        Alert.alert(
-            'Delete Account',
-            'Are you sure you want to delete your account?',
-            [
-              {
-                text: 'Cancel',
-                style: 'cancel',
-              },
-              {
-                text: 'Delete',
-                style: 'destructive',
-                onPress: async () => {
-                  try {
-                    const docRef = doc(db, collections.users, user.id);
+  const deleteUser = async () => {
+    Alert.alert(
+        'Delete Account',
+        'Are you sure you want to delete your account?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                const docRef = doc(db, collections.users, user.id);
 
-                    await deleteDoc(docRef)
-                        .then(() => {
-                          console.log("Entire Document has been deleted successfully.")
-                        })
-                        .catch(error => {
-                          console.log(error);
-                        })
+                await deleteDoc(docRef)
+                    .then(() => {
+                      console.log("Entire Document has been deleted successfully.")
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    })
 
-                    handleLogout();
+                handleLogout();
 
-                    console.log('Account deleted successfully');
-                  } catch (error) {
-                    console.error('Error deleting account:', error);
-                  }
-                },
-              },
-            ]
-        )
-    }
+                console.log('Account deleted successfully');
+              } catch (error) {
+                console.error('Error deleting account:', error);
+              }
+            },
+          },
+        ]
+    )
+  }
 
 
   const handleLogout = () => {
@@ -70,40 +70,40 @@ const ProfileScreen = ({ navigation }) => {
   const hideEditProfile = () => setModalVisible(false);
 
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <View style={styles.profile}>
-          <Image
-            source={require("../assets/profile.jpg")}
-            style={styles.image}
-          />
-          <View style={styles.profileDetails}>
-            <Text style={styles.profileHeading}>
-              {user.name} {user.surname}
-            </Text>
-            <Text style={styles.paragraph}>{user.username}</Text>
-            <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
-          </View>
+      <View style={styles.container}>
+        {loading ? (
+            <Text>Loading...</Text>
+        ) : (
+            <View style={styles.profile}>
+              <Image
+                  source={require("../assets/profile.jpg")}
+                  style={styles.image}
+              />
+              <View style={styles.profileDetails}>
+                <Text style={styles.profileHeading}>
+                  {user.name} {user.surname}
+                </Text>
+                <Text style={styles.paragraph}>{user.username}</Text>
+                <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
+              </View>
 
-          <TouchableOpacity onPress={showEditProfile} style={styles.editProfileButton}>
-            <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
+              <TouchableOpacity onPress={showEditProfile} style={styles.editProfileButton}>
+                <Text style={styles.buttonText}>Edit Profile</Text>
+              </TouchableOpacity>
 
-          <EditProfile visible={modalVisible} user={user} onClose={hideEditProfile} onUpdate={setUser}/>
+              <EditProfile visible={modalVisible} user={user} onClose={hideEditProfile} onUpdate={setUser}/>
 
-        </View>
-      )}
+            </View>
+        )}
 
-      <TouchableOpacity onPress={deleteUser} style={styles.logoutButton}>
-        <Text style={styles.buttonText}>Delete</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={deleteUser} style={styles.logoutButton}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
   );
 };
 
