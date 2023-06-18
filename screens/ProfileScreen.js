@@ -1,12 +1,21 @@
-import React, {useEffect, useState} from "react";
-import {Alert, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {auth, db} from "../firebase";
-import {getProfile} from "../services/user";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { auth, db } from "../firebase";
+import { getProfile } from "../services/user";
 import routes from "../constants/routes";
 import EditProfile from "./EditProfile";
 import colors from "../constants/colors";
-import {doc, deleteDoc} from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import collections from "../constants/collections";
+import labs from "../constants/labs";
+import LabCard from "../components/common/LabCard";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -24,40 +33,39 @@ const ProfileScreen = ({ navigation }) => {
 
   const deleteUser = async () => {
     Alert.alert(
-        'Delete Account',
-        'Are you sure you want to delete your account?',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
+      "Delete Account",
+      "Are you sure you want to delete your account?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const docRef = doc(db, collections.users, user.id);
+
+              await deleteDoc(docRef)
+                .then(() => {
+                  console.log("Entire Document has been deleted successfully.");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+
+              handleLogout();
+
+              console.log("Account deleted successfully");
+            } catch (error) {
+              console.error("Error deleting account:", error);
+            }
           },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: async () => {
-              try {
-                const docRef = doc(db, collections.users, user.id);
-
-                await deleteDoc(docRef)
-                    .then(() => {
-                      console.log("Entire Document has been deleted successfully.")
-                    })
-                    .catch(error => {
-                      console.log(error);
-                    })
-
-                handleLogout();
-
-                console.log('Account deleted successfully');
-              } catch (error) {
-                console.error('Error deleting account:', error);
-              }
-            },
-          },
-        ]
-    )
-  }
-
+        },
+      ]
+    );
+  };
 
   const handleLogout = () => {
     auth.signOut();
@@ -69,41 +77,70 @@ const ProfileScreen = ({ navigation }) => {
 
   const hideEditProfile = () => setModalVisible(false);
 
+  const navigateToLabInfo = (lab) => {
+    navigation.navigate("Laboratory", { lab: lab });
+  };
+
   return (
-      <View style={styles.container}>
-        {loading ? (
-            <Text>Loading...</Text>
-        ) : (
-            <View style={styles.profile}>
-              <Image
-                  source={require("../assets/profile.jpg")}
-                  style={styles.image}
-              />
-              <View style={styles.profileDetails}>
-                <Text style={styles.profileHeading}>
-                  {user.name} {user.surname}
-                </Text>
-                <Text style={styles.paragraph}>{user.username}</Text>
-                <Text style={styles.paragraph}>{auth.currentUser.email}</Text>
-              </View>
+    <View style={styles.container}>
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <View style={styles.profile}>
+          <Image
+            source={require("../assets/profile.jpg")}
+            style={styles.image}
+          />
+          <View style={styles.profileDetails}>
+            <Text style={styles.profileHeading}>
+              {user?.name} {user?.surname}
+            </Text>
+            <Text style={styles.paragraph}>@{user?.username}</Text>
+          </View>
 
-              <TouchableOpacity onPress={showEditProfile} style={styles.editProfileButton}>
-                <Text style={styles.buttonText}>Edit Profile</Text>
-              </TouchableOpacity>
+          <EditProfile
+            visible={modalVisible}
+            user={user}
+            onClose={hideEditProfile}
+            onUpdate={setUser}
+            onDelete={deleteUser}
+          />
 
-              <EditProfile visible={modalVisible} user={user} onClose={hideEditProfile} onUpdate={setUser}/>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={showEditProfile}
+              style={styles.editProfileButton}
+            >
+              <Text style={styles.buttonText}>Edit Profile</Text>
+            </TouchableOpacity>
 
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={styles.logoutButton}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.savedLabs}>
+            <Text style={styles.savedLabsHeading}>Saved Labs:</Text>
+            <View style={styles.savedLabsContainer}>
+              {labs.map((lab, index) => {
+                if (index % 2 == 0) {
+                  return (
+                    <LabCard
+                      key={index}
+                      lab={lab}
+                      onPress={() => navigateToLabInfo(lab)}
+                    />
+                  );
+                }
+              })}
             </View>
-        )}
-
-        <TouchableOpacity onPress={deleteUser} style={styles.logoutButton}>
-          <Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+          </View>
+        </View>
+      )}
+    </View>
   );
 };
 
@@ -114,13 +151,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 40,
+    paddingTop: 20,
   },
   profile: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: 20,
+    gap: 10,
   },
   image: {
     width: 100,
@@ -139,7 +176,13 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 14,
     color: "#888",
-    margin: 3
+  },
+  buttonContainer: {
+    marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
   logoutButton: {
     height: 40,
@@ -149,14 +192,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 2,
     padding: 10,
-    marginTop: 30,
   },
   buttonText: {
     color: "white",
     fontWeight: 500,
-  },
-  menu: {
-    marginTop: 30,
   },
   editProfileButton: {
     height: 40,
@@ -166,6 +205,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 2,
     padding: 10,
-    marginTop: 30,
-  }
+  },
+  savedLabs: {
+    marginTop: 50,
+    width: "100%",
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  savedLabsHeading: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  savedLabsContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+    gap: 10,
+  },
 });

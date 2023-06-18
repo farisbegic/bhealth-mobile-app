@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TouchableHighlight } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Modal,
+  TouchableHighlight,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const LaboratoryScreen = ({ route, navigation }) => {
@@ -24,97 +33,110 @@ const LaboratoryScreen = ({ route, navigation }) => {
   };
 
   return (
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>Laboratory Details</Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <Image source={require("../assets/lab.jpeg")} style={styles.headerImage} />
-            <Text style={styles.title}>Name:</Text>
-            <Text style={styles.info}>{lab.name}</Text>
-            <Text style={styles.title}>Address:</Text>
-            <Text style={styles.info}>{lab.address}</Text>
-            <Text style={styles.title}>Phone:</Text>
-            <Text style={styles.info}>{lab.phone}</Text>
-            <Text style={styles.title}>Email:</Text>
-            <Text style={styles.info}>{lab.email}</Text>
-
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Services:</Text>
-              <TouchableHighlight
-                  style={styles.dropdownButton}
-                  underlayColor="#eeeeee"
-                  onPress={() => setShowServicesModal(true)}
-              >
-                <>
-                  <Text style={styles.dropdownButtonText}>{selectedService}</Text>
-                  <Ionicons name="caret-down" size={16} color="#666666" style={styles.dropdownButtonIcon} />
-                </>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Doctors:</Text>
-              <TouchableHighlight
-                  style={styles.dropdownButton}
-                  underlayColor="#eeeeee"
-                  onPress={() => setShowDoctorsModal(true)}
-              >
-                <>
-                  <Text style={styles.dropdownButtonText}>{selectedDoctor}</Text>
-                  <Ionicons name="caret-down" size={16} color="#666666" style={styles.dropdownButtonIcon} />
-                </>
-              </TouchableHighlight>
-            </View>
-          </View>
-          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Laboratory Details</Text>
         </View>
+        <View style={styles.contentContainer}>
+          <Image
+            source={require("../assets/lab.jpeg")}
+            style={styles.headerImage}
+          />
+          <Text style={styles.title}>Name:</Text>
+          <Text style={styles.info}>{lab.name}</Text>
+          <Text style={styles.title}>Address:</Text>
+          <Text style={styles.info}>{lab.address}</Text>
+          <Text style={styles.title}>Phone:</Text>
+          <Text style={styles.info}>{lab.phone}</Text>
+          <Text style={styles.title}>Email:</Text>
+          <Text style={styles.info}>{lab.email}</Text>
 
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={showServicesModal}
-            onRequestClose={() => setShowServicesModal(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              {lab.services.map((service, index) => (
-                  <TouchableOpacity
-                      key={index}
-                      style={styles.modalItem}
-                      onPress={() => handleServiceSelect(service)}
-                  >
-                    <Text style={styles.modalItemText}>{service}</Text>
-                  </TouchableOpacity>
-              ))}
-            </View>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Services:</Text>
+            <TouchableHighlight
+              style={styles.dropdownButton}
+              underlayColor="#eeeeee"
+              onPress={() => setShowServicesModal(true)}
+            >
+              <>
+                <Text style={styles.dropdownButtonText}>{selectedService}</Text>
+                <Ionicons
+                  name="caret-down"
+                  size={16}
+                  color="#666666"
+                  style={styles.dropdownButtonIcon}
+                />
+              </>
+            </TouchableHighlight>
           </View>
-        </Modal>
 
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={showDoctorsModal}
-            onRequestClose={() => setShowDoctorsModal(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              {lab.doctors.map((doctor, index) => (
-                  <TouchableOpacity
-                      key={index}
-                      style={styles.modalItem}
-                      onPress={() => handleDoctorSelect(doctor)}
-                  >
-                    <Text style={styles.modalItemText}>{doctor}</Text>
-                  </TouchableOpacity>
-              ))}
-            </View>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Doctors:</Text>
+            <TouchableHighlight
+              style={styles.dropdownButton}
+              underlayColor="#eeeeee"
+              onPress={() => setShowDoctorsModal(true)}
+            >
+              <>
+                <Text style={styles.dropdownButtonText}>{selectedDoctor}</Text>
+                <Ionicons
+                  name="caret-down"
+                  size={16}
+                  color="#666666"
+                  style={styles.dropdownButtonIcon}
+                />
+              </>
+            </TouchableHighlight>
           </View>
-        </Modal>
-      </ScrollView>
+        </View>
+        <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showServicesModal}
+        onRequestClose={() => setShowServicesModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {lab.services.map((service, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.modalItem}
+                onPress={() => handleServiceSelect(service)}
+              >
+                <Text style={styles.modalItemText}>{service}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showDoctorsModal}
+        onRequestClose={() => setShowDoctorsModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {lab.doctors.map((doctor, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.modalItem}
+                onPress={() => handleDoctorSelect(doctor)}
+              >
+                <Text style={styles.modalItemText}>{doctor}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
+    </ScrollView>
   );
 };
 
@@ -193,7 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   headerImage: {
-    width: 300,
+    width: "100%",
     height: 300,
     resizeMode: "cover",
     borderRadius: 10,
@@ -220,12 +242,13 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#ffffff",
     borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    padding: 20,
+    gap: 10,
+    width: "80%",
   },
   modalItem: {
-    paddingVertical: 10,
     borderBottomWidth: 1,
+    paddingVertical: 10,
     borderBottomColor: "#dddddd",
   },
   modalItemText: {
@@ -233,6 +256,5 @@ const styles = StyleSheet.create({
     color: "#333333",
   },
 });
-
 
 export default LaboratoryScreen;

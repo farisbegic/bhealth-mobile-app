@@ -6,13 +6,14 @@ const Header = () => {
   return (
     <View style={styles.header}>
       <Image source={logo} style={styles.headerImage} />
-      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    height: 70,
+    paddingTop: 20,
+    paddingBottom: 20,
     backgroundColor: "#149998",
     justifyContent: "center",
     alignItems: "center",
@@ -27,4 +28,3 @@ const styles = StyleSheet.create({
 });
 
 export default Header;
-
